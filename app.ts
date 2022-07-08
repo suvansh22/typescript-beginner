@@ -1,38 +1,75 @@
-// union type
+//generics
 
-
-type combinable = string | number;
-
-function ages(input1: combinable, input2: combinable): combinable{
-    let result: string | number;
-    if(typeof input1 === 'number' && typeof input2 === 'number') {
-        result = input1 + input2;
-    } else {
-        result = input1.toString() + input2.toString()
-    }
-    return result;
+function genericFunction<Type>(arg: Type):Type{
+    return arg
 }
 
-function print(num: number): void{
-    console.log(num);
+//ways of using generic function
+let output1 = genericFunction<string>("string");
+let output2 = genericFunction(24);
+
+//generic type variable
+
+// function loggingIdentity<Type>(arg: Type[]): Type[]{
+//     return arg;
+// }
+const loggingIdentity: <Type>(arg: Type[])=>Type[] = (arg) => {
+    console.log(arg.length)
+    return arg;
+}
+let output3 = loggingIdentity<number>([1,2,3,4]);
+
+//generic types
+
+function identity<Type>(arg: Type): Type{
+    return arg;
 }
 
+//let identityFatArrowFunc: <Type>(arg: Type) => Type = identity;
+//or
+let identityFatArrowFunc: {<Type>(arg: Type): Type} = identity;
 
-function print1(num: number): void{
-    console.log(num);
-    return;
+//generic interface
+interface GenericIdentityFn{
+    <Type>(arg: Type): Type
 }
 
-function print3(num: number): undefined{
-    console.log(num);
-    return;
+interface GenericIdentityFnWithGenericParameter<Type>{
+    (arg: Type): Type
 }
 
-function add1(n1: number, n2:number): number{
-    return n1 + n2;
+//generic classes
+// class GenericNumber<NumType> {
+//     zeroValue: NumType;
+//     add: (x: NumType, y: NumType) => NumType;
+//   }
+
+//generic Constraints
+
+interface GenericContraints{
+    length: number
 }
 
-//function type
+function genericContraints<Type extends GenericContraints>(arg: Type):Type{
+    console.log(arg.length);
+    return arg;
+}
 
-var func: (a: number, b: number) => number;
-func = add1;
+class Animal{
+    numLegs: number = 4;
+}
+
+class Lion extends Animal{
+    type: string = "Carnivorous";
+}
+
+function createInstance<A>(c: new ()=>A): A{
+    return new c();
+}
+
+//advanced typescript
+const arr = [1,2,3,4,5] as const; //readonly
+
+arr.map((_, idx) => {
+    const c = arr[idx];
+})
